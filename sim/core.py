@@ -17,7 +17,6 @@ import threading
 import Queue
 import time
 import weakref
-import api
 
 import logging
 import traceback
@@ -307,10 +306,17 @@ class TopoNode (object):
       other = port.dst
       otherPort = port.dstPort
       events.send_link_down(self.entity.name, index, other.entity.name, otherPort)
-      other.entity.handle_link_down(otherPort, self.entity)
       other.ports[otherPort] = None
-      self.entity.handle_link_down(index, other.entity)
       self.ports[index] = None
+
+      try:
+        other.entity.handle_link_down(otherPort, self.entity)
+      except:
+        traceback.print_exc()
+      try:
+        self.entity.handle_link_down(index, other.entity)
+      except:
+        traceback.print_exc()
 
     remove = [index for index,value in enumerate(self.ports)
               if value is not None and value.dst is topoEntity]
@@ -373,6 +379,7 @@ def CreateEntity (_name, _kind, *args, **kw):
   """
   if _name in sys.modules['__builtin__'].__dict__:
     raise NameError(str(_name) + " already exists")
+  import api
 
   e = _kind(*args, **kw)
   setattr(e, 'name', _name)
