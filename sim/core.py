@@ -332,7 +332,7 @@ class TopoNode (object):
     return False
 
   def disconnect (self):
-    for p in list(self.ports):
+    for p in (port for port in self.ports if port):
       self.unlinkTo(p.dst)
 
   def send (self, packet, port, flood = False):
