@@ -38,11 +38,11 @@ class FakeEntity (Entity):
 
 def create (switch_type = FakeEntity, host_type = FakeEntity, n = 2):
     RIPRouter.create('student')
-    FakeEntity.create('dest', None, None)
+    BasicHost.create('dest')
     FakeEntity.create('announcer', None, [dest, 7])
     FakeEntity.create('listener', [dest, 8], None)
 
     topo.link(student, announcer)
     topo.link(student, listener)
-
+    
 
