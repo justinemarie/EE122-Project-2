@@ -2,7 +2,8 @@
 # This is a basic compatibility test to make sure you're using the built-in
 # classes properly.
 #
-# If you get an error message, or you never get any messages, you're likely
+# If this crashes, or you get an error message, or you never get any messages, 
+# you're likely
 # using the built-ins (particularly: RoutingUpdate) in such a way that your
 # implementation will fail the grading scripts - make sure you fix before 
 # turning in!
@@ -17,11 +18,11 @@ class FakeEntity (Entity):
         self.expect = expected
         self.announce = to_announce
         self.num_rx = 0
-        if(self.announce != None):
+        if(self.announce):
             self.timer = create_timer(5, self.send_announce)    
 
     def handle_rx(self, packet, port):
-        if(self.expect != None):
+        if(self.expect):
             if(isinstance(packet, RoutingUpdate)):
                 self.num_rx += 1
                 if(self.expect[0] in packet.all_dests() and packet.get_distance(self.expect[0]) == (self.expect[1])):
@@ -30,7 +31,7 @@ class FakeEntity (Entity):
                     print("Received a number of routing updates, none that performed the expected behavior. Better double-check your compatibility with the spec before turning in!")
                    
     def send_announce(self):
-        if(self.announce != None):
+        if(self.announce):
             update = RoutingUpdate()
             update.add_destination(self.announce[0], self.announce[1])
             self.send(update, flood=True)
