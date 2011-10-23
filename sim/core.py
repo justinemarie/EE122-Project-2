@@ -364,7 +364,12 @@ class TopoNode (object):
       if remote >=0 and remote < len(self.ports):
         remote = self.ports[remote]
         if remote is not None:
-          p = copy.copy(packet)
+          import basics
+          if isinstance(packet, basics.RoutingUpdate):
+            p = basics.RoutingUpdate()
+            p.paths = copy.copy(packet.paths)
+          else:
+            p = copy.copy(packet)
           remote.transfer(p) 
 
 
