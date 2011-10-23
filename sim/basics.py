@@ -3,9 +3,9 @@ from api import *
 class BasicHost (HostEntity):
   """ Basic host with a ping method """
 
-  def ping (self, dst):
+  def ping (self, dst, data=None):
     """ Sends a Ping packet to dst. """
-    self.send(Ping(dst), flood=True)
+    self.send(Ping(dst, data=data), flood=True)
 
   def handle_rx (self, packet, port):
     """
