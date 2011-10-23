@@ -140,6 +140,7 @@ class World (object):
   def __init__ (self):
     self.queue = Queue.PriorityQueue()
     self._thread = None
+    self._count = 0
 
     # When the world isn't running, items are put in the prelist.
     # They're added to the queue when the world is started, and
@@ -149,7 +150,8 @@ class World (object):
 
   def _real_doLater (_self, _seconds, _method, *_args, **_kw):
     t = time.time() + _seconds
-    _self.queue.put((t, _method, _args, _kw))
+    _self.queue.put((t, _self._count, _method, _args, _kw))
+    _self._count += 1
 
   def start (self):
     assert self._thread is None
@@ -208,12 +210,12 @@ class World (object):
       # Expired
       timeout = None
       if False:
-        if hasattr(o[1], "im_self"):
-          print o[1].im_self.__class__.__name__ + "." + o[1].im_func.__name__,
+        if hasattr(o[2], "im_self"):
+          print o[2].im_self.__class__.__name__ + "." + o[2].im_func.__name__,
         else:
-          print o[1],
-        print o[2],o[3] if len(o[3]) else ''
-      o[1](*o[2],**o[3])
+          print o[2],
+        print o[3],o[4] if len(o[4]) else ''
+      o[2](*o[3],**o[4])
 
 
 class TopoNode (object):
